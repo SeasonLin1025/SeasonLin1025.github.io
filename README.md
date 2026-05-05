@@ -4,6 +4,7 @@
 > 配合 vibe coding 工作流，针对每个目标岗位 5 分钟生成定制版本
 
 🌐 在线访问：<https://seasonlin1025.github.io>
+https://vscode.dev/github/deanpeters/Product-Manager-Skills/blob/main
 
 ---
 
