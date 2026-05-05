@@ -169,7 +169,7 @@ function renderContact(data) {
 
 /* ========== 导航：滚动联动高亮 + 锚点平滑跳转 ========== */
 function setupRouter() {
-  const items = Array.from($('.nav-item'));
+  const items = Array.from(document.querySelectorAll('.nav-item'));
   const map = new Map(); // section element -> nav item
   items.forEach(it => {
     const sec = document.getElementById('view-' + it.dataset.target);
