@@ -9,104 +9,125 @@
 </head>
 <body>
 
-<!-- ============ 顶部导航 ============ -->
-<nav class="nav">
-  <div class="nav-inner">
-    <a class="logo" href="#top">
-      <span class="logo-bracket">[</span>SeasonLin<span class="logo-cursor">_</span><span class="logo-bracket">]</span>
-    </a>
-    <ul class="nav-links">
-      <li><a href="#about">about</a></li>
-      <li><a href="#experience">experience</a></li>
-      <li><a href="#projects">projects</a></li>
-      <li><a href="#works">works</a></li>
-      <li><a href="#contact">contact</a></li>
-      <li><a class="pdf-btn" href="./resume.pdf" download>↓ PDF</a></li>
+<div class="layout">
+
+  <!-- ============ 左侧：个人信息卡 ============ -->
+  <aside class="side-card">
+    <div class="avatar">
+      <div class="avatar-placeholder" id="avatar">林</div>
+    </div>
+    <ul class="meta-list">
+      <li><span class="ico">📅</span><span id="meta-birth">2002.02.04</span></li>
+      <li><span class="ico">✨</span><span id="meta-mbti">infj-t · 水瓶座</span></li>
+      <li><span class="ico">🎓</span><span id="meta-edu1">武汉大学 · 土木工程 · 硕士</span></li>
+      <li><span class="ico">🏛️</span><span id="meta-edu2">合肥工业大学 · 城地工 · 学士</span></li>
     </ul>
-  </div>
-</nav>
-
-<!-- ============ Hero ============ -->
-<section id="top" class="hero">
-  <div class="hero-inner">
-    <div class="terminal-prompt">
-      <span class="prompt-symbol">$</span> whoami
+    <div class="contact-icons">
+      <a id="ic-mail" href="#" title="邮箱">✉</a>
+      <a id="ic-phone" href="#" title="电话">📞</a>
+      <a id="ic-github" href="#" target="_blank" rel="noopener" title="GitHub">⌨</a>
+      <a href="./resume.pdf" download title="下载 PDF 简历">📄</a>
     </div>
-    <h1 class="hero-name" id="hero-name">林熙哲</h1>
-    <div class="hero-tagline" id="hero-tagline"></div>
-    <div class="hero-meta" id="hero-meta"></div>
-    <div class="hero-actions">
-      <a class="btn btn-primary" href="#works">查看作品集 →</a>
-      <a class="btn btn-ghost" href="./resume.pdf" download>下载 PDF 简历</a>
-    </div>
-  </div>
-  <div class="hero-bg"></div>
-</section>
+  </aside>
 
-<!-- ============ About ============ -->
-<section id="about" class="section">
-  <h2 class="section-title"># about</h2>
-  <div class="about-grid">
-    <div class="about-card">
-      <h3>教育背景</h3>
-      <div id="education-list"></div>
-    </div>
-    <div class="about-card">
-      <h3>核心技能</h3>
-      <div class="skills-tags" id="skills-tags"></div>
-    </div>
-  </div>
-</section>
+  <!-- ============ 中间：分类内容区 ============ -->
+  <main class="content">
 
-<!-- ============ Experience ============ -->
-<section id="experience" class="section">
-  <h2 class="section-title"># experience</h2>
-  <div class="timeline" id="experience-timeline"></div>
-</section>
+    <!-- 首页 -->
+    <section class="view" data-view="home">
+      <h1 class="view-title" id="hero-name">林熙哲</h1>
+      <p class="view-tagline">在需求与代码间实现 <span class="hl">价值传递</span> 的数字世界构建者</p>
 
-<!-- ============ Projects ============ -->
-<section id="projects" class="section">
-  <h2 class="section-title"># projects</h2>
-  <div id="projects-list"></div>
-</section>
+      <div class="card">
+        <h2 class="card-title">🎯 关于我</h2>
+        <p id="about-tagline" class="card-text"></p>
+        <div class="kv-list" id="about-kv"></div>
+      </div>
 
-<!-- ============ Works ============ -->
-<section id="works" class="section">
-  <h2 class="section-title"># works · vibe coding</h2>
-  <p class="section-subtitle">
-    <span class="prompt-symbol">></span>
-    这里是我用 AI 协同编程（vibe coding）快速落地的产品 demo。每一个都是从 <em>PRD → 开发 → 上线</em> 的闭环练习。
-  </p>
-  <div class="works-grid" id="works-grid"></div>
-</section>
+      <div class="card">
+        <h2 class="card-title">🎓 教育背景</h2>
+        <div id="education-list"></div>
+      </div>
 
-<!-- ============ Contact ============ -->
-<section id="contact" class="section contact-section">
-  <h2 class="section-title"># contact</h2>
-  <div class="contact-grid">
-    <div class="contact-card">
-      <div class="contact-label">EMAIL</div>
-      <a class="contact-value" id="contact-email" href="#"></a>
+      <div class="card">
+        <h2 class="card-title">🛠️ 相关技能</h2>
+        <div class="skills-tags" id="skills-tags"></div>
+      </div>
+    </section>
+
+    <!-- 实习经历 -->
+    <section class="view" data-view="experience" hidden>
+      <h1 class="view-title">实习经历</h1>
+      <p class="view-tagline">从 <span class="hl">数据洞察</span> 到策略落地的产品实践者</p>
+      <div id="experience-list"></div>
+    </section>
+
+    <!-- 项目经历 -->
+    <section class="view" data-view="projects" hidden>
+      <h1 class="view-title">项目经历</h1>
+      <p class="view-tagline">在 <span class="hl">真实场景</span> 中跑通 PRD → 落地 → 商业化闭环</p>
+      <div id="projects-list"></div>
+    </section>
+
+    <!-- 作品集 -->
+    <section class="view" data-view="works" hidden>
+      <h1 class="view-title">Vibe Coding 作品集</h1>
+      <p class="view-tagline">用 AI 协同编程，把想法 <span class="hl">快速落地</span> 为可体验产品</p>
+      <div class="works-grid" id="works-grid"></div>
+    </section>
+
+    <!-- 联系 -->
+    <section class="view" data-view="contact" hidden>
+      <h1 class="view-title">联系方式</h1>
+      <p class="view-tagline">很高兴遇见你 · <span class="hl">期待一次合作</span></p>
+      <div class="contact-grid">
+        <div class="card contact-card">
+          <div class="contact-label">EMAIL</div>
+          <a class="contact-value" id="contact-email" href="#"></a>
+        </div>
+        <div class="card contact-card">
+          <div class="contact-label">PHONE</div>
+          <span class="contact-value" id="contact-phone"></span>
+        </div>
+        <div class="card contact-card">
+          <div class="contact-label">GITHUB</div>
+          <a class="contact-value" id="contact-github" href="#" target="_blank" rel="noopener">github.com/SeasonLin1025</a>
+        </div>
+        <div class="card contact-card">
+          <div class="contact-label">RESUME</div>
+          <a class="contact-value" href="./resume.pdf" download>↓ 下载 PDF 简历</a>
+        </div>
+      </div>
+    </section>
+
+    <footer class="footer">
+      © <span id="year"></span> 林熙哲 · Built with <span class="hl">vibe coding</span>
+      · <span id="footer-meta"></span>
+    </footer>
+  </main>
+
+  <!-- ============ 右侧：导航 + 标签云 ============ -->
+  <aside class="right-rail">
+    <nav class="nav-card">
+      <a href="#" class="nav-item active" data-target="home"><span class="ico">🏠</span>首页</a>
+      <a href="#" class="nav-item" data-target="experience"><span class="ico">💼</span>实习经历</a>
+      <a href="#" class="nav-item" data-target="projects"><span class="ico">📐</span>项目经历</a>
+      <a href="#" class="nav-item" data-target="works"><span class="ico">📷</span>作品集</a>
+      <a href="#" class="nav-item" data-target="contact"><span class="ico">🌐</span>联系我</a>
+    </nav>
+
+    <div class="tag-cloud">
+      <span>小镇做题家</span>
+      <span>目标导向</span>
+      <span>效率至上</span>
+      <span>终身学习</span>
+      <span>产品思维</span>
+      <span>AI 原住民</span>
+      <span>……</span>
     </div>
-    <div class="contact-card">
-      <div class="contact-label">PHONE</div>
-      <span class="contact-value" id="contact-phone"></span>
-    </div>
-    <div class="contact-card">
-      <div class="contact-label">GITHUB</div>
-      <a class="contact-value" id="contact-github" href="#" target="_blank" rel="noopener">github.com/SeasonLin1025</a>
-    </div>
-  </div>
-</section>
+  </aside>
 
-<footer class="footer">
-  <div>
-    © <span id="year"></span> 林熙哲 · Built with
-    <span class="accent">vibe coding</span>
-    · Deployed on GitHub Pages
-  </div>
-  <div class="footer-meta" id="footer-meta"></div>
-</footer>
+</div>
 
 <script src="./assets/main.js"></script>
 </body>

@@ -1,11 +1,12 @@
 // ===== 单一数据源驱动整站渲染 =====
 const $ = sel => document.querySelector(sel);
+const $$ = sel => document.querySelectorAll(sel);
 const esc = s => String(s ?? '')
   .replace(/&/g, '&' + 'amp;')
   .replace(/</g, '&' + 'lt;')
   .replace(/>/g, '&' + 'gt;');
 
-// 自动高亮文本中的百分比/数字指标（暖橙强调色）
+// 自动高亮百分比/数字指标
 function highlight(text) {
   return esc(text).replace(
     /(\d+(?:\.\d+)?(?:%|倍|万元?|笔|人|篇|场|个|名|位|轮|月|天)?)/g,
@@ -14,29 +15,46 @@ function highlight(text) {
 }
 
 async function loadResume() {
-  // 站点部署时 data/ 与 site/ 内容会合并到根目录（见 GitHub Actions）
   const res = await fetch('./data/resume.json?t=' + Date.now());
   return res.json();
 }
 
-function renderHero(data) {
+/* ========== 左侧信息卡 ========== */
+function renderSide(data) {
   const b = data.basic;
-  $('#hero-name').textContent = b.name;
-  $('#hero-tagline').textContent = b.tagline;
-  $('#hero-meta').innerHTML =
-    `<span class="prompt-symbol">»</span> ${esc(b.target)} · ${esc(b.email)} · ${esc(b.phone)}`;
-  // 打字机效果：tagline
-  const tagline = b.tagline;
-  const el = $('#hero-tagline');
-  el.textContent = '';
-  let i = 0;
-  const timer = setInterval(() => {
-    el.textContent = tagline.slice(0, ++i);
-    if (i >= tagline.length) clearInterval(timer);
-  }, 60);
+  const initial = (b.name || '').slice(0, 1);
+  $('#avatar').textContent = initial;
+
+  const edus = data.education || [];
+  if (edus[0]) {
+    $('#meta-edu1').textContent =
+      `${edus[0].school} · ${edus[0].major} · ${edus[0].degree}`;
+  }
+  if (edus[1]) {
+    $('#meta-edu2').textContent =
+      `${edus[1].school} · ${edus[1].major} · ${edus[1].degree}`;
+  } else {
+    $('#meta-edu2').parentElement.style.display = 'none';
+  }
+
+  $('#ic-mail').href = 'mailto:' + b.email;
+  $('#ic-phone').href = 'tel:' + b.phone;
+  $('#ic-github').href = b.github;
 }
 
-function renderEducation(data) {
+/* ========== 首页 · 关于我 + 教育 + 技能 ========== */
+function renderHome(data) {
+  const b = data.basic;
+  $('#hero-name').textContent = b.name;
+
+  $('#about-tagline').textContent = b.tagline;
+  $('#about-kv').innerHTML = `
+    <div class="kv"><b>目标岗位</b><span>${esc(b.target)}</span></div>
+    <div class="kv"><b>所在学校</b><span>${esc((data.education[0] || {}).school || '')}</span></div>
+    <div class="kv"><b>政治面貌</b><span>${esc(b.party || '—')}</span></div>
+    <div class="kv"><b>个人站点</b><a href="${esc(b.site)}" target="_blank" rel="noopener">${esc(b.site)}</a></div>
+  `;
+
   $('#education-list').innerHTML = data.education.map(e => `
     <div class="edu-item">
       <div class="edu-head">
@@ -47,39 +65,39 @@ function renderEducation(data) {
       ${(e.details || []).map(d => `<div class="edu-detail">› ${highlight(d)}</div>`).join('')}
     </div>
   `).join('');
-}
 
-function renderSkills(data) {
   $('#skills-tags').innerHTML = data.skills
-    .map(s => `<span class="skill-tag">${esc(s)}</span>`)
-    .join('');
+    .map(s => `<span class="skill-tag">${esc(s)}</span>`).join('');
 }
 
+/* ========== 实习经历 ========== */
 function renderExperience(data) {
-  $('#experience-timeline').innerHTML = data.internships.map(i => `
-    <div class="tl-item">
-      <div class="tl-head">
-        <span class="tl-company">${esc(i.company)}</span>
-        <span class="tl-period">${esc(i.period)}</span>
+  $('#experience-list').innerHTML = (data.internships || []).map(i => `
+    <div class="exp-card">
+      <div class="exp-head">
+        <span class="exp-company">💼 ${esc(i.company)}</span>
+        <span class="exp-period">${esc(i.period)}</span>
       </div>
-      <div class="tl-role">› ${esc(i.role)}</div>
-      <div class="tl-highlights">
-        ${i.highlights.map(h => `
-          <div class="tl-hl">
-            <div class="tl-hl-title">[${esc(h.title)}]</div>
-            <div class="tl-hl-content">${highlight(h.content)}</div>
-          </div>
-        `).join('')}
-      </div>
+      <div class="exp-role">${esc(i.role)}</div>
+      ${i.highlights.map(h => `
+        <div class="exp-hl">
+          <div class="exp-hl-title">${esc(h.title)}</div>
+          <div class="exp-hl-content">${highlight(h.content)}</div>
+        </div>
+      `).join('')}
     </div>
   `).join('');
 }
 
+/* ========== 项目经历 ========== */
 function renderProjects(data) {
-  const html = data.projects.map(p => `
+  const proj = (data.projects || []).map(p => `
     <div class="project-card">
-      <h3>${esc(p.name)}</h3>
-      <div class="project-meta">${esc(p.role)} · ${esc(p.period)}</div>
+      <div class="project-head">
+        <span class="project-name">📐 ${esc(p.name)}</span>
+        <span class="project-period">${esc(p.period)}</span>
+      </div>
+      <div class="project-role">${esc(p.role)}</div>
       <div class="project-desc">${highlight(p.description)}</div>
       <ul class="project-resp">
         ${p.responsibilities.map(r => `<li>${highlight(r)}</li>`).join('')}
@@ -87,22 +105,34 @@ function renderProjects(data) {
     </div>
   `).join('');
 
-  // 校园经历也复用 timeline 样式简化展示
-  const campusHtml = (data.campus || []).map(c => `
+  const campus = (data.campus || []).map(c => `
     <div class="project-card">
-      <h3>${esc(c.org)}</h3>
-      <div class="project-meta">${esc(c.role)} · ${esc(c.period)}</div>
+      <div class="project-head">
+        <span class="project-name">🎓 ${esc(c.org)}</span>
+        <span class="project-period">${esc(c.period)}</span>
+      </div>
+      <div class="project-role">${esc(c.role)}</div>
       ${c.highlights.map(h => `
-        <div class="project-desc"><strong style="color:var(--accent)">[${esc(h.title)}]</strong> ${highlight(h.content)}</div>
+        <div class="exp-hl">
+          <div class="exp-hl-title">${esc(h.title)}</div>
+          <div class="exp-hl-content">${highlight(h.content)}</div>
+        </div>
       `).join('')}
     </div>
   `).join('');
 
-  $('#projects-list').innerHTML = html + campusHtml;
+  $('#projects-list').innerHTML = proj + campus;
 }
 
+/* ========== 作品集 ========== */
 function renderWorks(data) {
-  $('#works-grid').innerHTML = (data.works || []).map(w => `
+  const list = data.works || [];
+  if (!list.length) {
+    $('#works-grid').innerHTML =
+      `<div class="card" style="grid-column:1/-1;color:var(--text-muted);text-align:center">暂无作品，敬请期待 ✨</div>`;
+    return;
+  }
+  $('#works-grid').innerHTML = list.map(w => `
     <div class="work-card">
       <div class="work-preview">
         <iframe src="./${esc(w.demoPath)}" loading="lazy" title="${esc(w.name)}"></iframe>
@@ -125,6 +155,7 @@ function renderWorks(data) {
   `).join('');
 }
 
+/* ========== 联系 ========== */
 function renderContact(data) {
   const b = data.basic;
   $('#contact-email').textContent = b.email;
@@ -136,39 +167,37 @@ function renderContact(data) {
     `${data.meta.variant} · ${data.meta.version} · 最后更新 ${data.meta.updatedAt}`;
 }
 
-// 滚动渐入
-function setupScrollReveal() {
-  const io = new IntersectionObserver(entries => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        e.target.style.opacity = 1;
-        e.target.style.transform = 'translateY(0)';
-        io.unobserve(e.target);
-      }
+/* ========== 分类切换 ========== */
+function setupRouter() {
+  const items = $$('.nav-item');
+  const views = $$('.view');
+  items.forEach(it => {
+    it.addEventListener('click', e => {
+      e.preventDefault();
+      const target = it.dataset.target;
+      items.forEach(x => x.classList.toggle('active', x === it));
+      views.forEach(v => {
+        v.hidden = v.dataset.view !== target;
+      });
+      window.scrollTo({ top: 0, behavior: 'smooth' });
     });
-  }, { threshold: 0.1 });
-  document.querySelectorAll('.tl-item, .project-card, .work-card, .about-card').forEach(el => {
-    el.style.opacity = 0;
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity .6s, transform .6s';
-    io.observe(el);
   });
 }
 
+/* ========== 初始化 ========== */
 (async function main() {
   try {
     const data = await loadResume();
-    renderHero(data);
-    renderEducation(data);
-    renderSkills(data);
+    renderSide(data);
+    renderHome(data);
     renderExperience(data);
     renderProjects(data);
     renderWorks(data);
     renderContact(data);
-    setupScrollReveal();
+    setupRouter();
   } catch (err) {
     console.error('[main] 渲染失败：', err);
     document.body.innerHTML +=
-      `<pre style="color:#ff6b35;padding:24px;font-family:monospace">渲染失败：${esc(err.message)}\n请确认通过本地服务器访问（npm run dev），不能直接双击 HTML。</pre>`;
+      `<pre style="color:#c0392b;padding:24px;font-family:monospace">渲染失败：${esc(err.message)}\n请确认通过本地服务器访问（npm run dev），不能直接双击 HTML。</pre>`;
   }
 })();
