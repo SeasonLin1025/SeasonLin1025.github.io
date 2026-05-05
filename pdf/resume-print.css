@@ -1,0 +1,105 @@
+@page {
+  size: A4;
+  margin: 16mm 14mm 14mm 14mm;
+}
+
+* { box-sizing: border-box; }
+
+html, body {
+  margin: 0;
+  padding: 0;
+  font-family: "SimSun", "Songti SC", "Noto Serif CJK SC", "Microsoft YaHei", serif;
+  font-size: 10.2pt;
+  line-height: 1.5;
+  color: #000;
+  background: #fff;
+}
+
+.name {
+  text-align: center;
+  font-size: 20pt;
+  font-weight: bold;
+  letter-spacing: 4px;
+  margin: 0 0 4px 0;
+}
+
+.basic-line {
+  text-align: center;
+  font-size: 10pt;
+  margin: 2px 0;
+}
+
+.section {
+  margin-top: 10px;
+}
+
+.section-title {
+  font-size: 12pt;
+  font-weight: bold;
+  background: #e8e8e8;
+  padding: 2px 6px;
+  margin: 6px 0 4px 0;
+  border-bottom: 1pt solid #000;
+  letter-spacing: 2px;
+}
+
+.edu-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-top: 3px;
+}
+
+.edu-row .period { flex: 0 0 22%; }
+.edu-row .school { flex: 0 0 22%; text-align: center; }
+.edu-row .major  { flex: 1; text-align: center; }
+.edu-row .degree { flex: 0 0 10%; text-align: right; }
+
+.exp-row {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+  margin-top: 6px;
+}
+.exp-row .company { flex: 1; }
+.exp-row .role    { flex: 0 0 30%; text-align: center; }
+.exp-row .period  { flex: 0 0 20%; text-align: right; }
+
+.bullet {
+  margin: 2px 0;
+  padding-left: 14px;
+  position: relative;
+  text-indent: 0;
+}
+.bullet::before {
+  content: "⚫";
+  font-size: 7pt;
+  position: absolute;
+  left: 0;
+  top: 3px;
+}
+
+.highlight {
+  margin: 2px 0;
+  text-indent: 2em;
+  text-align: justify;
+}
+.highlight .tag {
+  font-weight: bold;
+}
+
+.proj-desc {
+  margin: 2px 0;
+  text-indent: 2em;
+  text-align: justify;
+}
+
+.proj-resp {
+  margin: 2px 0;
+  text-indent: 2em;
+  text-align: justify;
+}
+
+/* 避免实习段跨页切断标题 */
+.exp-row { page-break-after: avoid; }
+.highlight { page-break-inside: avoid; }

@@ -1,0 +1,10 @@
+node_modules/
+pdf/_rendered.html
+.DS_Store
+*.log
+.vscode/
+.idea/
+# 生成的 PDF 建议提交（HR 直链下载）
+# resume.pdf
+site/data/
+site/resume.pdf

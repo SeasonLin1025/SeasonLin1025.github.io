@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+<meta name="theme-color" content="#3DBFA8" />
+<meta name="description" content="慢病用药小管家 - 帮助慢病患者管理用药计划、复诊提醒和健康档案" />
+<title>暖心管家 · 慢病用药智能助手</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E💊%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- ===== 启动欢迎页 ===== -->
+<div id="splash" class="splash">
+  <div class="splash-bg">
+    <div class="blob b1"></div>
+    <div class="blob b2"></div>
+    <div class="blob b3"></div>
+  </div>
+  <div class="splash-content">
+    <div class="splash-logo">
+      <div class="pill-icon">
+        <span class="pill-half pill-l"></span>
+        <span class="pill-half pill-r"></span>
+        <span class="pill-shine"></span>
+      </div>
+    </div>
+    <h1 class="splash-title">暖心管家</h1>
+    <p class="splash-subtitle">您身边的慢病用药智能助手</p>
+    <div class="splash-features">
+      <div class="sf-item"><span>🩺</span><em>问诊开方</em></div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-item"><span>💊</span><em>智能提醒</em></div>
+      <div class="sf-arrow">→</div>
+      <div class="sf-item"><span>📦</span><em>购药续方</em></div>
+    </div>
+    <button class="splash-btn" id="splashBtn">开始使用 <span>→</span></button>
+    <p class="splash-tip">💝 已为 <strong>238万</strong> 慢病用户提供贴心服务</p>
+  </div>
+</div>
+
+<!-- ===== 主应用 ===== -->
+<div id="app" class="app hidden">
+  <!-- 顶部状态栏 -->
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-logo">
+        <span class="bl-pill"></span>
+      </div>
+      <div class="brand-text">
+        <h1>暖心管家</h1>
+        <p class="subtitle" id="greeting">您好，欢迎回来</p>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <button class="icon-btn" id="aiBtn" title="AI 助手" aria-label="AI助手">
+        <span class="ai-dot"></span>🤖
+      </button>
+      <button class="icon-btn" id="notifBtn" title="提醒中心" aria-label="提醒中心">
+        🔔<span class="badge" id="notifBadge">0</span>
+      </button>
+    </div>
+  </header>
+
+  <!-- 主内容区 -->
+  <main id="main" class="main"></main>
+
+  <!-- 底部导航 -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" data-page="home"><span class="ni-icon">🏠</span><em>首页</em></button>
+    <button class="nav-item" data-page="plan"><span class="ni-icon">📋</span><em>用药</em></button>
+    <button class="nav-item nav-center" data-page="checkin">
+      <span class="ni-center"><span class="ni-pulse"></span>✓</span>
+      <em>打卡</em>
+    </button>
+    <button class="nav-item" data-page="health"><span class="ni-icon">❤️</span><em>健康</em></button>
+    <button class="nav-item" data-page="me"><span class="ni-icon">👤</span><em>我的</em></button>
+  </nav>
+</div>
+
+<!-- ===== 通用弹窗 ===== -->
+<div class="modal-mask" id="modalMask">
+  <div class="modal" id="modalBox"></div>
+</div>
+
+<!-- ===== AI 助手浮窗 ===== -->
+<div class="ai-panel" id="aiPanel"></div>
+
+<!-- ===== Toast ===== -->
+<div id="toast"></div>
+
+<!-- ===== 全屏庆祝动画 ===== -->
+<div id="confetti"></div>
+
+<script src="app.js"></script>
+</body>
+</html>

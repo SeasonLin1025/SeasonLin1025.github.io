@@ -1,0 +1,19 @@
+{
+  "name": "seasonlin1025-resume",
+  "version": "1.0.0",
+  "description": "林熙哲的个人简历与作品集站点（双形态：在线网站 + 像素级复刻 PDF）",
+  "private": true,
+  "scripts": {
+    "build:pdf": "node pdf/build-pdf.js",
+    "sync": "node scripts/sync-data.js",
+    "dev": "node scripts/sync-data.js && npx serve site -l 5173",
+    "build": "node pdf/build-pdf.js && node scripts/sync-data.js"
+  },
+  "devDependencies": {
+    "puppeteer-core": "^24.15.0",
+    "serve": "^14.2.1"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}
