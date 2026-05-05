@@ -167,21 +167,49 @@ function renderContact(data) {
     `${data.meta.variant} · ${data.meta.version} · 最后更新 ${data.meta.updatedAt}`;
 }
 
-/* ========== 分类切换 ========== */
+/* ========== 导航：滚动联动高亮 + 锚点平滑跳转 ========== */
 function setupRouter() {
-  const items = $$('.nav-item');
-  const views = $$('.view');
+  const items = Array.from($('.nav-item'));
+  const map = new Map(); // section element -> nav item
+  items.forEach(it => {
+    const sec = document.getElementById('view-' + it.dataset.target);
+    if (sec) map.set(sec, it);
+  });
+
+  // 点击：平滑滚动到目标块
   items.forEach(it => {
     it.addEventListener('click', e => {
       e.preventDefault();
-      const target = it.dataset.target;
-      items.forEach(x => x.classList.toggle('active', x === it));
-      views.forEach(v => {
-        v.hidden = v.dataset.view !== target;
-      });
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+      const sec = document.getElementById('view-' + it.dataset.target);
+      if (!sec) return;
+      const top = sec.getBoundingClientRect().top + window.pageYOffset - 16;
+      window.scrollTo({ top, behavior: 'smooth' });
     });
   });
+
+  // 滚动：选出"距视口顶部最近且已进入的"section 高亮
+  const setActive = (el) => {
+    items.forEach(x => x.classList.toggle('active', map.get(el) === x));
+  };
+
+  const sections = Array.from(map.keys());
+  const onScroll = () => {
+    const probe = window.innerHeight * 0.35; // 视口上 35% 处作为判定线
+    let current = sections[0];
+    for (const sec of sections) {
+      const top = sec.getBoundingClientRect().top;
+      if (top - probe <= 0) current = sec;
+    }
+    if (current) setActive(current);
+  };
+
+  let ticking = false;
+  window.addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(() => { onScroll(); ticking = false; });
+  }, { passive: true });
+  onScroll();
 }
 
 /* ========== 初始化 ========== */

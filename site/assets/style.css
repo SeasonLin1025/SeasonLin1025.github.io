@@ -112,6 +112,13 @@ ul { list-style: none; }
 /* ===== 中间内容 ===== */
 .content { min-width: 0; }
 
+.view {
+  padding-top: 8px;
+  margin-bottom: 48px;
+  scroll-margin-top: 24px;
+}
+.view:last-of-type { margin-bottom: 16px; }
+
 .view-title {
   font-size: 30px;
   font-weight: 800;

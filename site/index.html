@@ -34,7 +34,7 @@
   <main class="content">
 
     <!-- 首页 -->
-    <section class="view" data-view="home">
+    <section class="view" id="view-home" data-view="home">
       <h1 class="view-title" id="hero-name">林熙哲</h1>
       <p class="view-tagline">在需求与代码间实现 <span class="hl">价值传递</span> 的数字世界构建者</p>
 
@@ -56,28 +56,28 @@
     </section>
 
     <!-- 实习经历 -->
-    <section class="view" data-view="experience" hidden>
+    <section class="view" id="view-experience" data-view="experience">
       <h1 class="view-title">实习经历</h1>
       <p class="view-tagline">从 <span class="hl">数据洞察</span> 到策略落地的产品实践者</p>
       <div id="experience-list"></div>
     </section>
 
     <!-- 项目经历 -->
-    <section class="view" data-view="projects" hidden>
+    <section class="view" id="view-projects" data-view="projects">
       <h1 class="view-title">项目经历</h1>
       <p class="view-tagline">在 <span class="hl">真实场景</span> 中跑通 PRD → 落地 → 商业化闭环</p>
       <div id="projects-list"></div>
     </section>
 
     <!-- 作品集 -->
-    <section class="view" data-view="works" hidden>
+    <section class="view" id="view-works" data-view="works">
       <h1 class="view-title">Vibe Coding 作品集</h1>
       <p class="view-tagline">用 AI 协同编程，把想法 <span class="hl">快速落地</span> 为可体验产品</p>
       <div class="works-grid" id="works-grid"></div>
     </section>
 
     <!-- 联系 -->
-    <section class="view" data-view="contact" hidden>
+    <section class="view" id="view-contact" data-view="contact">
       <h1 class="view-title">联系方式</h1>
       <p class="view-tagline">很高兴遇见你 · <span class="hl">期待一次合作</span></p>
       <div class="contact-grid">
@@ -109,11 +109,11 @@
   <!-- ============ 右侧：导航 + 标签云 ============ -->
   <aside class="right-rail">
     <nav class="nav-card">
-      <a href="#" class="nav-item active" data-target="home"><span class="ico">🏠</span>首页</a>
-      <a href="#" class="nav-item" data-target="experience"><span class="ico">💼</span>实习经历</a>
-      <a href="#" class="nav-item" data-target="projects"><span class="ico">📐</span>项目经历</a>
-      <a href="#" class="nav-item" data-target="works"><span class="ico">📷</span>作品集</a>
-      <a href="#" class="nav-item" data-target="contact"><span class="ico">🌐</span>联系我</a>
+      <a href="#view-home" class="nav-item active" data-target="home"><span class="ico">🏠</span>首页</a>
+      <a href="#view-experience" class="nav-item" data-target="experience"><span class="ico">💼</span>实习经历</a>
+      <a href="#view-projects" class="nav-item" data-target="projects"><span class="ico">📐</span>项目经历</a>
+      <a href="#view-works" class="nav-item" data-target="works"><span class="ico">📷</span>作品集</a>
+      <a href="#view-contact" class="nav-item" data-target="contact"><span class="ico">🌐</span>联系我</a>
     </nav>
 
     <div class="tag-cloud">
