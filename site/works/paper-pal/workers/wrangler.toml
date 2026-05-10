@@ -1,0 +1,21 @@
+# Cloudflare Workers 配置 · Paper Pal 试用代理
+# 部署前修改 name 为你想要的子域名前缀
+
+name = "paper-pal-proxy"
+main = "proxy.js"
+compatibility_date = "2024-09-01"
+
+# 普通环境变量(明文)
+[vars]
+DAILY_LIMIT = "5"
+MODEL = "gemini-2.5-flash"
+
+# KV 命名空间(用于 IP 限频)
+# 在 Cloudflare Dashboard 创建 KV 后,把 id 填到下面
+# 或运行: wrangler kv:namespace create RATE_KV
+[[kv_namespaces]]
+binding = "RATE_KV"
+id = "REPLACE_WITH_YOUR_KV_ID"
+
+# 注意:GEMINI_KEY 必须用 secret 方式注入(不要写在这里)
+# 部署后运行: wrangler secret put GEMINI_KEY

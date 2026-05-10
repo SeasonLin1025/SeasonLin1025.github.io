@@ -124,6 +124,20 @@
   ],
   "works": [
     {
+      "id": "paper-pal",
+      "name": "Paper Pal · AI 论文阅读伴侣",
+      "tagline": "三句话精华 + 6 维结构卡 + PM 视角解读，让每篇论文 30 秒读懂",
+      "stack": ["Vanilla JS (ESM)", "PDF.js", "Gemini API", "OpenAI 兼容协议", "Cloudflare Workers"],
+      "highlights": [
+        "AI 原生：BYOK + Workers 代理双模式，用户零成本，作者零运维",
+        "纯前端架构：PDF 在浏览器本地解析，论文不上传，隐私零妥协",
+        "PM 视角差异化：除了精华 + 卡片，还有「这论文能落地什么产品」专属解读",
+        "完整 PRD（22 项功能 / 6 大模块）→ MVP → 上线全流程自驱"
+      ],
+      "demoPath": "works/paper-pal/index.html",
+      "sourceUrl": "https://github.com/SeasonLin1025"
+    },
+    {
       "id": "med-manager",
       "name": "Med Manager · 用药管理工具",
       "tagline": "为长辈做的轻量级用药提醒 Web App",

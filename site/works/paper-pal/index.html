@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<meta name="theme-color" content="#2f9e6b" />
+<meta name="description" content="Paper Pal · AI 论文阅读伴侣 - 让每篇论文都不再难啃" />
+<title>Paper Pal · 论文阅读伴侣</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ctext y='.9em' font-size='90'%3E📑%3C/text%3E%3C/svg%3E" />
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<!-- ===== 顶部导航 ===== -->
+<header class="topbar">
+  <a class="brand" href="../../index.html">
+    <span class="brand-icon">📑</span>
+    <span class="brand-name">Paper Pal</span>
+    <span class="brand-tag">论文阅读伴侣</span>
+  </a>
+  <div class="nb-bar" id="nbBar" hidden>
+    <span class="nb-icon">📓</span>
+    <span class="nb-name" id="nbName" title="点击重命名">论文集</span>
+    <button class="btn-mini" id="btnNewNotebook" title="新建论文集">+ 新论文集</button>
+  </div>
+  <div class="topbar-actions">
+    <button class="btn-ghost" id="btnHistory" title="历史记录">📚</button>
+    <button class="btn-ghost" id="btnSettings" title="设置">⚙️</button>
+    <a class="btn-ghost" href="../../index.html" title="返回作品集">←</a>
+  </div>
+</header>
+
+<!-- ===== 主区域 ===== -->
+<main class="app">
+
+  <!-- 上传引导 -->
+  <section class="upload-zone" id="uploadZone">
+    <div class="upload-inner">
+      <div class="upload-icon">📑</div>
+      <h2 class="upload-title">把论文扔进来,我来帮你读</h2>
+      <p class="upload-sub">支持 PDF · 完全在浏览器本地处理 · 你的论文不会上传到任何地方</p>
+
+      <label class="upload-btn">
+        <input type="file" id="fileInput" accept="application/pdf" hidden />
+        📂 选择 PDF 文件
+      </label>
+      <p class="upload-hint">或直接拖拽到此区域</p>
+
+      <div class="upload-tips">
+        <div class="tip-item"><span>⚡</span><em>三句话精华</em><small>30秒读懂一篇</small></div>
+        <div class="tip-item"><span>🧱</span><em>6 维结构卡</em><small>问题/方法/数据/结果/不足/启示</small></div>
+        <div class="tip-item"><span>💬</span><em>对论文提问</em><small>带原文引用</small></div>
+        <div class="tip-item"><span>🎯</span><em>PM 视角解读</em><small>这论文能落地什么产品?</small></div>
+      </div>
+
+      <div class="trial-banner" id="trialBanner">
+        <span class="trial-dot"></span>
+        <span>未配置 API Key — 可<b>免费试用 5 次/天</b>,或<a href="#" id="linkSetKey">贴入自己的 Gemini Key</a>无限使用</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- 论文阅读视图 (上传后显示) -->
+  <section class="reader" id="reader" hidden>
+    <div class="reader-grid" id="readerGrid">
+
+      <!-- 左:PDF 预览 + Sources 列表 -->
+      <aside class="pane pane-pdf">
+        <div class="sources-bar">
+          <div class="sources-bar-head">
+            <span>📚 论文集 (<span id="sourceCount">0</span>)</span>
+            <label class="btn-mini btn-add-source" title="追加一篇">
+              <input type="file" id="addSourceInput" accept="application/pdf" hidden multiple />
+              + 追加
+            </label>
+          </div>
+          <div class="sources-list" id="sourcesList"></div>
+        </div>
+        <div class="pane-head">
+          <span class="pane-title" id="pdfTitle">论文.pdf</span>
+          <button class="btn-mini" id="btnNewPaper" title="清空当前论文集">↺ 全部清空</button>
+        </div>
+        <div class="pdf-viewer" id="pdfViewer">
+          <canvas id="pdfCanvas"></canvas>
+          <div class="pdf-empty" id="pdfEmpty" hidden>
+            <div>🪶</div>
+            <p>这篇论文是从历史恢复的<br/>原始 PDF 不在本地,请重新拖入以预览</p>
+            <label class="btn-mini">
+              <input type="file" id="restorePdfInput" accept="application/pdf" hidden />
+              选择 PDF 文件
+            </label>
+          </div>
+        </div>
+        <div class="pdf-pager">
+          <button class="btn-mini" id="btnPrevPage">‹</button>
+          <span id="pageInfo">- / -</span>
+          <button class="btn-mini" id="btnNextPage">›</button>
+        </div>
+      </aside>
+
+      <!-- 拖拽分隔 1 -->
+      <div class="resizer" data-resize="left" title="拖拽调整宽度"></div>
+
+      <!-- 中:AI 解读结果 -->
+      <section class="pane pane-result">
+        <div class="pane-tabs">
+          <button class="tab active" data-tab="summary">⚡ 三句话精华</button>
+          <button class="tab" data-tab="cards">🧱 结构卡片</button>
+          <button class="tab" data-tab="pm">🎯 PM 视角</button>
+          <button class="tab tab-cross" data-tab="compare" title="跨论文对比">⚔️ 对比</button>
+          <button class="tab tab-cross" data-tab="synthesis" title="综述初稿">🌳 综述</button>
+        </div>
+
+        <div class="tab-pane active" data-pane="summary">
+          <div class="result-content" id="summaryContent">
+            <div class="placeholder">点击下方"开始解读",AI 将生成这篇论文的三句话精华。</div>
+          </div>
+        </div>
+
+        <div class="tab-pane" data-pane="cards">
+          <div class="result-content" id="cardsContent">
+            <div class="placeholder">结构卡片将以 6 个维度拆解论文。</div>
+          </div>
+        </div>
+
+        <div class="tab-pane" data-pane="pm">
+          <div class="result-content" id="pmContent">
+            <div class="placeholder">从产品经理视角,分析这篇论文能落地什么产品、面向哪类用户。</div>
+          </div>
+        </div>
+
+        <div class="tab-pane" data-pane="compare">
+          <div class="result-content" id="compareContent">
+            <div class="placeholder">勾选 2 篇及以上论文,生成横向对比表。</div>
+          </div>
+        </div>
+
+        <div class="tab-pane" data-pane="synthesis">
+          <div class="result-content" id="synthesisContent">
+            <div class="placeholder">勾选 2 篇及以上论文,生成综述初稿(脉络/分支/时间线)。</div>
+          </div>
+        </div>
+
+        <div class="action-bar">
+          <button class="btn-primary" id="btnAnalyze">✨ 开始解读</button>
+          <span class="status" id="analyzeStatus"></span>
+        </div>
+      </section>
+
+      <!-- 拖拽分隔 2 -->
+      <div class="resizer" data-resize="right" title="拖拽调整宽度"></div>
+
+      <!-- 右:对话问答 -->
+      <aside class="pane pane-chat">
+        <div class="pane-head">
+          <div class="chat-mode">
+            <button class="chat-mode-btn active" data-mode="single">💬 当前论文</button>
+            <button class="chat-mode-btn" data-mode="cross">🔀 跨论文</button>
+          </div>
+        </div>
+        <div class="chat-list" id="chatList">
+          <div class="chat-tip">试试这些问题:</div>
+          <div class="chat-suggests">
+            <button class="suggest">这篇论文的核心创新点是什么?</button>
+            <button class="suggest">实验数据集是什么规模?</button>
+            <button class="suggest">作者承认的局限性有哪些?</button>
+            <button class="suggest">这篇适合什么背景的人读?</button>
+          </div>
+        </div>
+        <div class="chat-input-bar">
+          <input type="text" id="chatInput" placeholder="输入你的问题…" />
+          <button class="btn-send" id="btnSend">→</button>
+        </div>
+      </aside>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ===== 设置抽屉 ===== -->
+<div class="drawer" id="settingsDrawer" hidden>
+  <div class="drawer-mask" data-close></div>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <h3>⚙️ 设置</h3>
+      <button class="btn-ghost" data-close>✕</button>
+    </div>
+    <div class="drawer-body">
+
+      <div class="form-group">
+        <label class="form-label">LLM 服务商</label>
+        <select id="providerSelect" class="form-control">
+          <option value="zhipu-flash">智谱 GLM-4-Flash(🎉 永久免费 · 推荐)</option>
+          <option value="gemini-flash">Gemini 2.5 Flash(免费 · 实际配额按账号 20-250 次/天)</option>
+          <option value="gemini-pro">Gemini 2.5 Pro(⚠️ 仅 AI Plus 订阅可免费用)</option>
+          <option value="deepseek">DeepSeek(国内稳定 · 需充值 ≥¥1)</option>
+          <option value="openai">OpenAI(GPT-4o-mini)</option>
+          <option value="custom">自定义 OpenAI 兼容</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">API Key
+          <span class="form-hint" id="keyHint">前往 <a href="https://aistudio.google.com/apikey" target="_blank">Google AI Studio</a> 免费获取</span>
+        </label>
+        <input type="password" id="apiKeyInput" class="form-control" placeholder="AIza... 或 sk-..." />
+      </div>
+
+      <div class="form-group" id="customGroup" hidden>
+        <label class="form-label">Base URL</label>
+        <input type="text" id="baseUrlInput" class="form-control" placeholder="https://api.example.com/v1" />
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">模型名(可选)
+          <span class="form-hint">留空使用默认;想用其它型号(如 <code>glm-4-plus</code>、<code>glm-4.5</code>)直接填入</span>
+        </label>
+        <input type="text" id="modelInput" class="form-control" placeholder="留空 = 使用默认" />
+      </div>
+
+      <div class="form-meta">
+        <span class="badge badge-ok">🔒 仅存于浏览器本地</span>
+        <span class="badge">永不上传服务器</span>
+      </div>
+
+      <div class="form-actions">
+        <button class="btn-primary" id="btnSaveKey">保存</button>
+        <button class="btn-ghost" id="btnUseTrial">使用免费试用模式</button>
+      </div>
+
+      <div class="form-tips">
+        <h4>💡 三种使用模式</h4>
+        <ul>
+          <li><b>免费试用</b>:不填 Key,每天 5 次,自动调用作者的 Gemini 配额</li>
+          <li><b>Gemini 自带</b>:Pro 会员去 AI Studio 拿 Key,每天 1000 次免费</li>
+          <li><b>其他厂商</b>:DeepSeek/OpenAI 都按 OpenAI 兼容协议接入</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== 历史记录抽屉 ===== -->
+<div class="drawer" id="historyDrawer" hidden>
+  <div class="drawer-mask" data-close></div>
+  <div class="drawer-panel">
+    <div class="drawer-head">
+      <h3>📚 历史论文</h3>
+      <button class="btn-ghost" data-close>✕</button>
+    </div>
+    <div class="drawer-body">
+      <div id="historyList" class="history-list">
+        <div class="placeholder">还没读过论文,上传第一篇试试 →</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== Toast ===== -->
+<div class="toast" id="toast" hidden></div>
+
+<!-- 主程序(PDF.js 在用户上传时按需加载,不阻塞 UI) -->
+<script type="module" src="app.js"></script>
+
+</body>
+</html>
